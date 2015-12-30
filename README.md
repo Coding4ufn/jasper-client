@@ -7,7 +7,7 @@ Client code for the Jasper voice computing platform. Jasper is an open source pl
 
 Learn more at [jasperproject.github.io](http://jasperproject.github.io/), where we have assembly and installation instructions, as well as extensive documentation. For the relevant disk image, please visit [SourceForge](http://sourceforge.net/projects/jasperproject/).
 
-## Contributing
+## Contributing 
 
 If you'd like to contribute to Jasper, please read through our **[Contributing Guide](CONTRIBUTING.md)**, which outlines the philosophies to preserve, tests to run, and more. We highly recommend reading through this guide before writing any code.
 
