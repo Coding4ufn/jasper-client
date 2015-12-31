@@ -268,7 +268,20 @@ class JuliusSTT(AbstractSTTEngine):
     def is_available(cls):
         return diagnose.check_executable('julius')
 
+class BaiduSTT(AbstractSTTEngine):
+    """docstring for BaiduSTT"""
+    def __init__(self, arg):
+        super(BaiduSTT, self).__init__()
+        self.arg = arg
 
+    @classmethod
+    def transcribe(self, fp):
+        return None
+
+    @classmethod
+    def is_available(cls):
+        return  diagnose.check_network_connection()
+        
 class GoogleSTT(AbstractSTTEngine):
     """
     Speech-To-Text implementation which relies on the Google Speech API.

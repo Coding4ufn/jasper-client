@@ -105,7 +105,8 @@ def run():
 
     stt_engines = {
         "sphinx": None,
-        "google": "GOOGLE_SPEECH"
+        "google": "GOOGLE_SPEECH",
+        "baidu" : None
     }
 
     response = raw_input("\nIf you would like to choose a specific STT " +
