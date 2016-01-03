@@ -636,7 +636,7 @@ class IvonaTTS(AbstractMp3TTSEngine):
 
 
 def get_default_engine_slug():
-    return 'osx-tts' if platform.system().lower() == 'darwin' else 'espeak-tts'
+    return 'osx-tts' if platform.system().lower() == 'darwin' else 'dummy-tts'#'espeak-tts'
 
 
 def get_engine_by_slug(slug=None):

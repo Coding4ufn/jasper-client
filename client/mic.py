@@ -167,8 +167,8 @@ class Mic:
         stream.stop_stream()
         stream.close()
 
-        with tempfile.NamedTemporaryFile(mode='w+b') as f:
-            wav_fp = wave.open(f, 'wb')
+        with tempfile.NamedTemporaryFile(mode='w+b',suffix='.wav', delete=False) as f:
+            wav_fp = wave.open('test.wav', 'wb')
             wav_fp.setnchannels(1)
             wav_fp.setsampwidth(pyaudio.get_sample_size(pyaudio.paInt16))
             wav_fp.setframerate(RATE)

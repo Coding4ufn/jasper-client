@@ -16,6 +16,9 @@ import jasperpath
 import diagnose
 import vocabcompiler
 
+import cStringIO
+import urllib, urllib2, pycurl
+
 
 class AbstractSTTEngine(object):
     """
@@ -270,17 +273,76 @@ class JuliusSTT(AbstractSTTEngine):
 
 class BaiduSTT(AbstractSTTEngine):
     """docstring for BaiduSTT"""
-    def __init__(self, arg):
+
+
+
+    SLUG = 'baidu'
+
+
+    def __init__(self, api_key=None, language='en-us'):
         super(BaiduSTT, self).__init__()
-        self.arg = arg
+        #self.arg = arg
 
     @classmethod
     def transcribe(self, fp):
-        return None
+        def get_token():  
+            apiKey = "P6yNkb53IwvBwvAEjVF9pQUz" 
+            secretKey = "b0e5e316cece2a0ef1684315461fc457" 
+           
+            auth_url = "https://openapi.baidu.com/oauth/2.0/token?grant_type=client_credentials&client_id=" + apiKey + "&client_secret=" + secretKey;  
+           
+            res = urllib2.urlopen(auth_url)  
+            json_data = res.read()  
+            return json.loads(json_data)['access_token'] 
+
+        token = get_token()
+
+        wav = wave.open('static/audio/jasper.wav', 'rb')
+        nf = wav.getnframes()  
+        f_len = nf * 2 
+        audio_data = wav.readframes(nf)  
+        #with open('../static/audio/time.wav', 'rb') as f:
+        #    speech_data = f.read();
+       # audio_data = base64.b64encode(speech_data)
+        #audio_data = speech_data
+        f_len = len(audio_data)
+        print 'file lenght %s' % f_len
+       
+        cuid = "6c:0b:84:91:5c:b0" #my xiaomi phone MAC  
+        srv_url = 'http://vop.baidu.com/server_api' + '?cuid=' + cuid + '&token=' + token  
+        http_header = [  
+            'Content-Type: audio/wav; rate=16000',  
+            'Content-Length: %d' % f_len  
+        ]  
+
+        buf = cStringIO.StringIO()
+       
+        c = pycurl.Curl()  
+        c.setopt(pycurl.URL, str(srv_url)) #curl doesn't support unicode  
+        #c.setopt(c.RETURNTRANSFER, 1)  
+        c.setopt(c.HTTPHEADER, http_header)   #must be list, not dict  
+        c.setopt(c.POST, 1)  
+        c.setopt(c.CONNECTTIMEOUT, 30)  
+        c.setopt(c.TIMEOUT, 30)  
+        c.setopt(c.WRITEFUNCTION, buf.write)  
+        c.setopt(c.POSTFIELDS, audio_data)  
+        c.setopt(c.POSTFIELDSIZE, f_len)  
+        c.perform() #pycurl.perform() has no return val 
+
+
+        err = json.loads(buf.getvalue())['err_no']
+        if err != 0:
+            print buf.getvalue()
+            return []
+        else:
+            result = json.loads(buf.getvalue())['result']
+            print 'result : %s' % (result[0][0])
+        return result[0][0]
 
     @classmethod
     def is_available(cls):
-        return  diagnose.check_network_connection()
+        return True
+        #return  diagnose.check_network_connection()
         
 class GoogleSTT(AbstractSTTEngine):
     """
