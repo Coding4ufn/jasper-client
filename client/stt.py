@@ -297,7 +297,7 @@ class BaiduSTT(AbstractSTTEngine):
 
         token = get_token()
 
-        wav = wave.open('static/audio/jasper.wav', 'rb')
+        wav = wave.open("test.wav", 'rb')
         nf = wav.getnframes()  
         f_len = nf * 2 
         audio_data = wav.readframes(nf)  

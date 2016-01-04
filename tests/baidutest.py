@@ -45,7 +45,7 @@ def get_token():
 
 ## post audio to server  
 def use_cloud(token):  
-    fp = wave.open('test_converted.wav', 'rb')
+    fp = wave.open('test.wav', 'rb')
     nf = fp.getnframes()  
     f_len = nf * 2 
     audio_data = fp.readframes(nf)  

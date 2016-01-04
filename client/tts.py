@@ -73,7 +73,8 @@ class AbstractTTSEngine(object):
     def play(self, filename):
         # FIXME: Use platform-independent audio-output here
         # See issue jasperproject/jasper-client#188
-        cmd = ['aplay', '-D', 'plughw:1,0', str(filename)]
+        #cmd = ['aplay', '-D', 'plughw:1,0', str(filename)]
+        cmd = ['aplay', str(filename)]
         self._logger.debug('Executing %s', ' '.join([pipes.quote(arg)
                                                      for arg in cmd]))
         with tempfile.TemporaryFile() as f:
@@ -496,6 +497,12 @@ class BaiduTTS(AbstractMp3TTSEngine):
         url = "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&text=%s" % phrase
         urllib.urlretrieve(url, tmpfile)
         self.play_mp3(tmpfile)
+        #import pyglet
+        
+        #source=pyglet.media.load(tmpfile)
+        #player=pyglet.media.Player()
+        #player.queue(source)
+        #player.play()
         os.remove(tmpfile)
 
 
@@ -734,5 +741,5 @@ if __name__ == '__main__':
     print("")
     for i, engine in enumerate(available_engines, start=1):
         print("%d. Testing engine '%s'..." % (i, engine.SLUG))
-        engine.get_instance().say("This is a test.")
+        engine.get_instance().say("南风，原名姜海龙，中国内地原创歌手。")
     print("Done.")
