@@ -472,6 +472,33 @@ class GoogleTTS(AbstractMp3TTSEngine):
         self.play_mp3(tmpfile)
         os.remove(tmpfile)
 
+class BaiduTTS(AbstractMp3TTSEngine):
+    """
+    Uses the Baidu TTS online translator
+    Requires pymad 
+    """
+
+    SLUG = "baidu-tts"
+
+    def __init__(self):
+        super(self.__class__, self).__init__()
+
+
+    @classmethod
+    def is_available(cls):
+        return True
+
+    def say(self, phrase):
+        self._logger.debug("Saying '%s' with '%s'", phrase, self.SLUG)
+        with tempfile.NamedTemporaryFile(suffix='.mp3', delete=False) as f:
+            tmpfile = f.name
+        tmpfile = tmpfile.decode("utf-8")
+        url = "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&text=%s" % phrase
+        urllib.urlretrieve(url, tmpfile)
+        self.play_mp3(tmpfile)
+        os.remove(tmpfile)
+
+
 
 class MaryTTS(AbstractTTSEngine):
     """
@@ -636,7 +663,7 @@ class IvonaTTS(AbstractMp3TTSEngine):
 
 
 def get_default_engine_slug():
-    return 'osx-tts' if platform.system().lower() == 'darwin' else 'dummy-tts'#'espeak-tts'
+    return 'osx-tts' if platform.system().lower() == 'darwin' else 'baidu-tts'#'espeak-tts'
 
 
 def get_engine_by_slug(slug=None):
