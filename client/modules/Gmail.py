@@ -4,7 +4,7 @@ import email
 import re
 from dateutil import parser
 
-WORDS = ["EMAIL", "INBOX"]
+#WORDS = ["EMAIL", "INBOX"]
 
 
 def getSender(email):
