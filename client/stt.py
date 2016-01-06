@@ -297,14 +297,14 @@ class BaiduSTT(AbstractSTTEngine):
 
         token = get_token()
 
-        wav = wave.open("test.wav", 'rb')
-        nf = wav.getnframes()  
-        f_len = nf * 2 
-        audio_data = wav.readframes(nf)  
-        #with open('../static/audio/time.wav', 'rb') as f:
-        #    speech_data = f.read();
-       # audio_data = base64.b64encode(speech_data)
-        #audio_data = speech_data
+        #wav = wave.open("test.wav", 'rb')
+        #nf = wav.getnframes()  
+        #audio_data = wav.readframes(nf) 
+
+        #with open('test.wav', 'rb') as f:
+        #    audio_data = f.read();
+
+        audio_data = fp.read()
         f_len = len(audio_data)
         print 'file lenght %s' % f_len
        
@@ -336,8 +336,9 @@ class BaiduSTT(AbstractSTTEngine):
             return []
         else:
             result = json.loads(buf.getvalue())['result']
-            print 'result : %s' % (result[0][0])
-        return result[0][0]
+            print json.loads(buf.getvalue())
+            print 'result : %s' % (result[0])
+        return result[0]
 
     @classmethod
     def is_available(cls):

@@ -156,7 +156,7 @@ class Mic:
         frames = frames[-20:]
 
         # otherwise, let's keep recording for few seconds and save the file
-        DELAY_MULTIPLIER = 1
+        DELAY_MULTIPLIER = 2
         for i in range(0, RATE / CHUNK * DELAY_MULTIPLIER):
 
             data = stream.read(CHUNK)
@@ -166,8 +166,8 @@ class Mic:
         stream.stop_stream()
         stream.close()
 
-        with tempfile.NamedTemporaryFile(mode='w+b',suffix='.wav', delete=False) as f:
-            wav_fp = wave.open('test.wav', 'wb')
+        with tempfile.NamedTemporaryFile(mode='w+b') as f:
+            wav_fp = wave.open(f, 'wb')
             wav_fp.setnchannels(1)
             wav_fp.setsampwidth(pyaudio.get_sample_size(pyaudio.paInt16))
             wav_fp.setframerate(RATE)
