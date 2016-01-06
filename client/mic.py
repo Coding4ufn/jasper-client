@@ -113,7 +113,7 @@ class Mic:
         frames = []
 
         # stores the lastN score values
-        lastN = [i for i in range(30)]
+        lastN = []
 
         # calculate the long run average, and thereby the proper threshold
         for i in range(0, RATE / CHUNK * THRESHOLD_TIME):
@@ -122,9 +122,8 @@ class Mic:
             frames.append(data)
 
             # save this data point as a score
-            lastN.pop(0)
             lastN.append(self.getScore(data))
-            average = sum(lastN) / len(lastN)
+        average = sum(lastN) / len(lastN)
 
         # this will be the benchmark to cause a disturbance over!
         THRESHOLD = average * THRESHOLD_MULTIPLIER
