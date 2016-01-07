@@ -47,7 +47,7 @@ class Mic:
     def fetchThreshold(self):
 
         # TODO: Consolidate variables from the next three functions
-        THRESHOLD_MULTIPLIER = 1.8
+        THRESHOLD_MULTIPLIER = 1.1
         RATE = 16000
         CHUNK = 1024
 
@@ -65,7 +65,7 @@ class Mic:
         frames = []
 
         # stores the lastN score values
-        lastN = [i for i in range(20)]
+        lastN = []
 
         # calculate the long run average, and thereby the proper threshold
         for i in range(0, RATE / CHUNK * THRESHOLD_TIME):
@@ -74,9 +74,8 @@ class Mic:
             frames.append(data)
 
             # save this data point as a score
-            lastN.pop(0)
             lastN.append(self.getScore(data))
-            average = sum(lastN) / len(lastN)
+        average = sum(lastN) / len(lastN)
 
         stream.stop_stream()
         stream.close()
@@ -208,7 +207,7 @@ class Mic:
         # check if no threshold provided
         if THRESHOLD is None:
             THRESHOLD = self.fetchThreshold()
-
+        print "THRESHOLD = %s" %( THRESHOLD )
         self.speaker.play(jasperpath.data('audio', 'beep_hi.wav'))
 
         # prepare recording stream
@@ -221,22 +220,32 @@ class Mic:
         frames = []
         # increasing the range # results in longer pause after command
         # generation
-        lastN = [THRESHOLD * 1.2 for i in range(30)]
+        lastN = [THRESHOLD /1.1 for i in range(8)]
+
+        begin = False
+        end = False
 
         for i in range(0, RATE / CHUNK * LISTEN_TIME):
 
             data = stream.read(CHUNK)
             frames.append(data)
             score = self.getScore(data)
-
+            #print "score = %s"%(score)
             lastN.pop(0)
             lastN.append(score)
 
             average = sum(lastN) / float(len(lastN))
-
+            print "average = %s"%(average)
             # TODO: 0.8 should not be a MAGIC NUMBER!
-            if average < THRESHOLD * 0.8:
+            if average > THRESHOLD :
+                begin = True
+                print 'begin'
+            if begin and average < THRESHOLD :
+                end = True
+                print "end"
+            if begin and end:
                 break
+
 
         self.speaker.play(jasperpath.data('audio', 'beep_lo.wav'))
 
